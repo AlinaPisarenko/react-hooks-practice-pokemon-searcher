@@ -1,19 +1,42 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PokemonCollection from "./PokemonCollection";
 import PokemonForm from "./PokemonForm";
 import Search from "./Search";
 import { Container } from "semantic-ui-react";
 
 function PokemonPage() {
+  const [allPokemon, setAllPokemon] = useState([])
+  const [search, setSearch] = useState('')
+
+  useEffect(() => {
+    fetch('http://localhost:3001/pokemon')
+    .then(res => res.json())
+    .then(data => setAllPokemon(data))
+  }, [])
+
+  const handleAddPokemon = (newObj) => {
+    fetch('http://localhost:3001/pokemon', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(newObj)
+    })
+    .then(res => res.json())
+    .then(newPokemon => setAllPokemon([...allPokemon, newPokemon]))
+  }
+
+  const filteredPokemon = allPokemon.filter(p => p.name.toLowerCase().includes(search.toLowerCase()))
+
   return (
     <Container>
       <h1>Pokemon Searcher</h1>
       <br />
-      <PokemonForm />
+      <PokemonForm handleAddPokemon={handleAddPokemon}/>
       <br />
-      <Search />
+      <Search search={search} setSearch={setSearch}/>
       <br />
-      <PokemonCollection />
+      <PokemonCollection allPokemon={filteredPokemon}/>
     </Container>
   );
 }
