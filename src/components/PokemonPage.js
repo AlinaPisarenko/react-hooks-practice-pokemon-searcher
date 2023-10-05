@@ -8,12 +8,15 @@ function PokemonPage() {
   const [allPokemon, setAllPokemon] = useState([])
   const [search, setSearch] = useState('')
 
+  // fetching data
   useEffect(() => {
     fetch('http://localhost:3001/pokemon')
     .then(res => res.json())
-    .then(data => setAllPokemon(data))
+    .then(data => {
+            setAllPokemon(data)})
   }, [])
 
+  // Posting new pokemon to db.json and updating DOM
   const handleAddPokemon = (newObj) => {
     fetch('http://localhost:3001/pokemon', {
       method: 'POST',
@@ -26,6 +29,7 @@ function PokemonPage() {
     .then(newPokemon => setAllPokemon([...allPokemon, newPokemon]))
   }
 
+  // filtering pokemon by name
   const filteredPokemon = allPokemon.filter(p => p.name.toLowerCase().includes(search.toLowerCase()))
 
   return (
