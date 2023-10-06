@@ -8,29 +8,29 @@ function PokemonPage() {
   const [allPokemon, setAllPokemon] = useState([])
   const [search, setSearch] = useState('')
 
-  // fetching data
+  // fetching data and setting it to allPokemon state
   useEffect(() => {
-    fetch('http://localhost:3001/pokemon')
-    .then(res => res.json())
-    .then(data => {
-            setAllPokemon(data)})
+  fetch('http://localhost:3001/pokemon')
+  .then(res => res.json())
+  .then(data => setAllPokemon(data))
   }, [])
 
-  // Posting new pokemon to db.json and updating DOM
-  const handleAddPokemon = (newObj) => {
+  const handleAddPokemon = (newPokemon) => {
+    //posting new pokemon to DB
     fetch('http://localhost:3001/pokemon', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(newObj)
+      body: JSON.stringify(newPokemon)
     })
     .then(res => res.json())
-    .then(newPokemon => setAllPokemon([...allPokemon, newPokemon]))
+    //updating the state to add new pokemon to the DOM
+    .then(newPoke => setAllPokemon([...allPokemon, newPoke]))
   }
 
-  // filtering pokemon by name
-  const filteredPokemon = allPokemon.filter(p => p.name.toLowerCase().includes(search.toLowerCase()))
+  // filter creates a new copy of an array and filters objects that satisfy a condition
+  const filteredPokemon = allPokemon.filter(pokemon => pokemon.name.toLowerCase().includes(search.toLowerCase()))
 
   return (
     <Container>
@@ -38,9 +38,10 @@ function PokemonPage() {
       <br />
       <PokemonForm handleAddPokemon={handleAddPokemon}/>
       <br />
-      <Search search={search} setSearch={setSearch}/>
+      <Search search={search} setSearch={setSearch} />
       <br />
-      <PokemonCollection allPokemon={filteredPokemon}/>
+      {/* make sure to pass filtered array */}
+      <PokemonCollection allPokemon={filteredPokemon} />
     </Container>
   );
 }

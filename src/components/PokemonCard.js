@@ -2,24 +2,27 @@ import React, { useState } from "react";
 import { Card } from "semantic-ui-react";
 
 function PokemonCard({ pokemon }) {
-  const [back, setBack] = useState(false)
+  const [frontImg, setFrontImg] = useState(true)
+
+  // destructuring pokemon object
+  const { name, hp, sprites } = pokemon
 
   return (
-    <Card>
-      <div>
+    <Card onClick={() => setFrontImg(!frontImg)}>
+      <div >
         <div className="image">
+          {/* conditionally rendering front/back sprites */}
           <img 
-          src={!back ? pokemon.sprites.front : pokemon.sprites.back} 
-          onClick={() => setBack(!back)}
-          alt={pokemon.name} />
+          src={frontImg ? sprites.front : sprites.back} 
+          alt={name} />
         </div>
         <div className="content">
-          <div className="header">{pokemon.name}</div>
+          <div className="header">{name}</div>
         </div>
         <div className="extra content">
           <span>
             <i className="icon heartbeat red" />
-            {pokemon.hp}
+            {hp}
           </span>
         </div>
       </div>
